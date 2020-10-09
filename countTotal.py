@@ -18,21 +18,17 @@ import matplotlib.pyplot as plt
 
 def readExcel(path):
     df = pd.read_excel(path)
+    print(df)
     return df
 
-
-def countByTime(df):
+def countByDay(df):
     """Print "Hello World" and return None"""
     print("每天提交的次数折线图")
-    df = df.loc[:,['stu_id','commit_time']]
-    df.columns = ['id','time']
+    df = df.loc[:,['stu_id','exe_id', 'commit_time']]
+    df.columns = ['id', 'exe_id', 'time']
     df = df.dropna(axis=0, subset=['time'])
-    a = np.arange(52404, dtype=int)
-    for i in range(len(a)):
-        a[i] = 1
-
     df['time'] = pd.to_datetime(df['time'],unit='ms')
-    df['count'] = a
+    df['count'] = 1
     print('转换后的数据：')
     print(df)
 
@@ -64,14 +60,38 @@ def countByTime(df):
     # plt.legend()
     plt.show()
 
+def countByHours(df):
+    print('按时间段统计提交次数')
+    df = df.loc[:, ['stu_id', 'commit_time']]
+    df.columns = ['id', 'time']
+    df = df.dropna(axis=0, subset=['time'])
+    df['time'] = pd.to_datetime(df['time'],unit='ms')
+    df['count'] = 1
+    print('时间戳转换后的数据：')
+    print(df)
+
+    print('数据统计')
+    print(df['time'].describe())
+
+    df = pd.DataFrame(df[['count']].values,index=df['time'])
+    print('时间为索引的数据')
+    print(df)
 
 
-
-
-
-
+    resDf = pd.DataFrame(columns=['0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23'])
+    resD = df.resample('H')
+    print(resD)
+    print(type(resD))
+    for name,group in resD:
+        hour = name.hour
+        print(hour)
+        count = group.sum()
+        print(count)
+        resDf[count] = resDf[count] + count
+        # break
+    print(resDf)
 # main program starts here
 if __name__ == '__main__':
     path = 'mydata\\stu_ass_exe_info.xlsx'
     df = readExcel(path)
-    countByTime(df)
+    countByHours(df)

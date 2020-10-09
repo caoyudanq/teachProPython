@@ -13,18 +13,19 @@ def student(df):
     df.columns = ['id','exe_id','time']
     df['time'] = pd.to_datetime(df['time'],unit='ms')
     df['count'] = 1
-    print(df)
+    # print(df)
     idGroup = df.groupby('id')
+    stuDf = pd.DataFrame(columns=['jiange_days', 'youxiao_days', 'first_day', 'last_day', 'counts'])
+    print(stuDf)
 
-    plt.xlabel('time')
-    plt.ylabel('count')
-    plt.title('Commit Times Total / Day ')
+
     for id,group in idGroup:
-        print('学生id')
-        print(id)
-        stu = pd.DataFrame(group[['count']].values,index=group['time'])
+        stu = pd.DataFrame(group[['count']].values, index=group['time'])
         res = stu.resample('D').sum()
-        display(res)
+        stuDf.loc[id] = [len(res.index), len(res[res[0] > 0]), res.index[0], res.index[len(res)-1], res.sum()[0]]
+
+    print(stuDf)
+    stuDf.to_excel('handle.xlsx')
 
 # main program starts here
 if __name__ == '__main__':

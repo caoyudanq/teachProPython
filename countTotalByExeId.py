@@ -22,21 +22,20 @@ def readExcel(path):
 def CountByExeId(df):
     """Print "Hello World" and return None"""
     print("Good Bye World")
-    df = df.loc[:,['stu_id','exe_id','commit_time']]
+    df = df.loc[:, ['stu_id', 'exe_id', 'commit_time']]
     print(df)
-    df.columns = ['id','exe_id','time']
+    df.columns = ['id', 'exe_id', 'time']
     ids = df.groupby('exe_id')
 
     print(ids.size())
 
     x1 = ids.size().index
     y1 = ids.size().values
-    plt.plot(x1,y1,label='line',color='r')
+    plt.plot(x1, y1, label='line', color='r')
     plt.xlabel('exe_id')
     plt.ylabel('count')
     plt.title('exercise commit times')
     plt.show()
-
 
 # main program starts here
 if __name__ == '__main__':
